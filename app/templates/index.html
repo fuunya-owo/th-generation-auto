@@ -1,0 +1,27 @@
+<head>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+  <h2>Choisissez un fichier JSON</h2>
+  <ul>
+    {% macro render_tree(nodes, prefix='') %}
+      {% for node in nodes %}
+        {% if node.type == 'dir' %}
+          <li>
+            <strong>{{ node.name }}/</strong>
+            <ul style="margin-left: 1.5rem;">
+              {{ render_tree(node.children) }}
+            </ul>
+          </li>
+        {% else %}
+          <li>
+            <a href="{{ url_for('main.form', filename=node.path) }}">{{ node.name }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+    {% endmacro %}
+
+    {{ render_tree(tree) }}
+  </ul>
+</body>

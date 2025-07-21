@@ -1,0 +1,35 @@
+{% macro render_color_group(key, index, group_data, languages, sectionType='content') %}
+  <div data-group-index="{{ index }}">
+    <div class="grid-content-2">
+      <strong>Groupe {{ index | int + 1 }}</strong>
+      <button type="button" onclick="removeColorGroup(this)"><i class="fas fa-times"></i> Supprimer ce groupe</button>
+    </div>
+
+    <div class="grid-content-2">
+    {% for lang in languages %}
+      <label>Label ({{ lang }})</label>
+      <input type="text" {% if sectionType.endswith('Spoiler') %}class="spoiler"{% endif %}
+             name="{{ key }}_{{ sectionType }}_group_{{ index }}_content{{ lang }}"
+             value="{{ group_data['content' ~ lang] | default('') }}">
+    {% endfor %}
+    </div>
+
+    <div data-color-list class="colors">
+      {% if group_data.colors is defined and group_data.colors | length > 0 %}
+        {% for color in group_data.colors %}
+          <input type="color" 
+                  name="{{ key }}_{{ sectionType }}_group_{{ index }}_color_{{ loop.index0 }}" 
+                  value="{{ color }}">
+          <button type="button" onclick="removeColor(this)"><i class="fas fa-times"></i></button>
+        {% endfor %}
+      {% else %}
+        <!-- Si aucune couleur, mettre une couleur par défaut -->
+        <input type="color" 
+                name="{{ key }}_{{ sectionType }}_group_{{ index }}_color_0" 
+                value="#000000">
+        <button type="button" onclick="removeColor(this)"><i class="fas fa-times"></i></button>
+      {% endif %}
+    </div>
+    <button type="button" onclick="addColor(this)"><i class="fas fa-plus"></i> Ajouter une couleur</button>
+  </div>
+{% endmacro %}

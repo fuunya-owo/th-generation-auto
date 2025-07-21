@@ -1,0 +1,37 @@
+{% macro input(key, field) %}
+  <fieldset>
+    <legend>{{ field.label }}</legend>
+
+    {% set language_keys = [] %}
+    {% for subkey in field.keys() if subkey.startswith('content') and subkey != 'content' and subkey != 'contentSpoiler' %}
+    {% set lang = subkey[7:] %}
+    {% if 'Spoiler' not in lang %}
+        {% set _ = language_keys.append(lang) %}
+    {% endif %}
+    {% endfor %}
+
+    <div class="grid-content-4">
+    {% if language_keys | length > 0 %}
+    {# Champs multilingues détectés dynamiquement #}
+      {% for lang in language_keys %}
+          <label for="{{ key }}_content{{ lang }}">Content ({{ lang }})</label>
+          <input type="text" id="{{ key }}_content{{ lang }}" name="{{ key }}_content{{ lang }}" value="{{ field['content' ~ lang] | default('') }}">
+
+          {% if field['content' ~ lang ~ 'Spoiler'] is defined %}
+              <label for="{{ key }}_content{{ lang }}Spoiler">Content Spoiler ({{ lang }})</label>
+              <input class="spoiler" type="text" id="{{ key }}_content{{ lang }}Spoiler" name="{{ key }}_content{{ lang }}Spoiler" value="{{ field.get('content' ~ lang ~ 'Spoiler', '') }}">
+          {% endif %}
+      {% endfor %}
+    {% else %}
+    {# Champs simples sans langues #}
+      <label for="{{ key }}_content">Content</label>
+      <input type="text" id="{{ key }}_content" name="{{ key }}_content" value="{{ field.content | default('') }}">
+
+      {% if field.contentSpoiler is defined %}
+          <label for="{{ key }}_contentSpoiler">Content Spoiler</label>
+          <input class="spoiler" type="text" id="{{ key }}_contentSpoiler" name="{{ key }}_contentSpoiler" value="{{ field.contentSpoiler | default('') }}">
+      {% endif %}
+    {% endif %}
+    </div>
+  </fieldset>
+{% endmacro %}

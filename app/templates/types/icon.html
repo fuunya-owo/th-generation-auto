@@ -1,0 +1,25 @@
+{% macro icon(key, field) %}
+<fieldset>
+  <legend>{{ field.label }}</legend>
+  <small style="font-style: italic;">Note : Toyhou.se utilise la version payante de FontAwesome. Certains icons n'apparaîtront pas ou pas correctement dans les aperçus, bien qu'ils puissent être utilisés dans TH.</small>
+
+  <div class="grid-content-4-reverse">
+    <!-- content -->
+    <div class="grid-content-2">
+      <label for="{{ key }}_content">Icon Class</label>
+      <input type="text" id="{{ key }}_content" name="{{ key }}_content" value="{{ field.content }}">
+    </div>
+    <i id="{{ key }}_preview" class="{{ field.content }}" style="font-size: 24px;"></i>
+    
+
+    <!-- contentSpoiler -->
+    {% if field.contentSpoiler is defined %}
+      <div class="grid-content-2">
+        <label for="{{ key }}_contentSpoiler">Icon Class Spoiler</label>
+        <input class="spoiler" type="text" id="{{ key }}_contentSpoiler" name="{{ key }}_contentSpoiler" value="{{ field.contentSpoiler }}">
+      </div>
+      <i id="{{ key }}_spoiler_preview" class="{{ field.contentSpoiler }}" style="font-size: 24px;"></i>
+    {% endif %}
+  </div>
+</fieldset>
+{% endmacro %}

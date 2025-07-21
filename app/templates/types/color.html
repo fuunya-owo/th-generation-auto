@@ -1,0 +1,29 @@
+{% import 'types/group_colors.html' as type_group_colors %}
+
+{% macro color(key, field, languages) %}
+{% if field.contentSpoiler is defined %}
+<div class="grid-content-textarea">
+  {% endif %}
+  <fieldset class="mb-4 border p-3 rounded">
+    <legend>{{ field.label }} (principal)</legend>
+    <div id="{{ key }}_content_groups">
+      {% for group_key, group in field.get('content', {}).items() %}
+        {{ type_group_colors.render_color_group(key, group_key, group, languages, 'content') }}
+      {% endfor %}
+    </div>
+    <button type="button" onclick='addColorGroup("{{ key }}", {{ languages | tojson | safe }}, "content")'><i class="fas fa-plus"></i> Ajouter un groupe</button>
+  </fieldset>
+
+  {% if field.contentSpoiler is defined %}
+  <fieldset class="mb-4 border p-3 rounded">
+    <legend>{{ field.label }} (spoiler)</legend>
+    <div id="{{ key }}_contentSpoiler_groups">
+    {% for group_key, group in field.get('contentSpoiler', {}).items() %}
+        {{ type_group_colors.render_color_group(key, group_key, group, languages, 'contentSpoiler') }}
+    {% endfor %}
+    </div>
+    <button type="button" onclick='addColorGroup("{{ key }}", {{ languages | tojson | safe }}, "contentSpoiler")'><i class="fas fa-plus"></i> Ajouter un groupe</button>
+  </fieldset>
+</div>
+{% endif %}
+{% endmacro %}

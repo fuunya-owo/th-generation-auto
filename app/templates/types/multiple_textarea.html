@@ -1,0 +1,41 @@
+{% macro multiple_textarea(key, field) %}
+  <fieldset id="{{ key }}_fieldset">
+            <legend>{{ field.label }}</legend>
+            <div class="grid-content-textarea">
+            {% for subkey, items in field.items() %}
+            {% if subkey != "label" and subkey != "type" %}
+                {% if subkey.startswith("content") %}
+                {% set suffix = subkey[7:] %}
+                {% if suffix == "" %}
+                    {% set group_label = field.label %}
+                {% elif "Spoiler" in suffix %}
+                    {% set langcode = suffix.replace("Spoiler", "") %}
+                    {% if langcode == "" %}
+                      {% set group_label = field.label ~ " Spoiler" %}
+                    {% else %}
+                      {% set group_label = field.label ~ " Spoiler (" ~ langcode ~ ")" %}
+                    {% endif %}
+                {% else %}
+                    {% set group_label = field.label ~ " (" ~ suffix ~ ")" %}
+                {% endif %}
+
+                <div class="lang-group" id="{{ key }}_{{ subkey }}_group">
+                    <h4>{{ group_label }}</h4>
+                    <div class="grid-content">
+                        {% for i in range(items|length) %}
+                        <div class="textarea-block">
+                            <textarea {% if 'Spoiler' in suffix %}class="spoiler"{% endif %} rows="1" name="{{ key }}_{{ subkey }}_{{ i }}">{{ items[i] }}</textarea>
+                            <div style="text-align: end;">
+                                <button type="button" onclick="removeTextarea(this)"><i class="fas fa-times"></i> Supprimer</button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button type="button" onclick="addTextarea('{{ key }}', '{{ subkey }}'{% if 'Spoiler' in suffix %}, spoiler=true{% endif %})"><i class="fas fa-plus"></i> Ajouter un bloc</button>
+                </div>
+                {% endif %}
+            {% endif %}
+            {% endfor %}
+            </div>
+        </fieldset>
+{% endmacro %}

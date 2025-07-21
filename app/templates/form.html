@@ -1,0 +1,67 @@
+{% import 'types/template.html' as type_template %}
+{% import 'types/icon.html' as type_icon %}
+{% import 'types/image.html' as type_image %}
+{% import 'types/input.html' as type_input %}
+{% import 'types/textarea.html' as type_textarea %}
+{% import 'types/multiple_textarea.html' as type_multitextarea %}
+{% import 'types/color.html' as type_color %}
+{% import 'types/links.html' as type_links %}
+
+<head>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+
+<body>
+<h2>Formulaire basé sur le fichier {{ filename }}</h2>
+<form method="post">
+  {% for key, field in schema.items() %}
+    {% if field.type == "template" %}
+      {{ type_template.template(key, field, templates) }}
+    {% elif field.type == 'icon' %}
+      {{ type_icon.icon(key, field) }}
+    {% elif field.type == 'image' %}
+      {{ type_image.image(key, field) }}
+    {% elif field.type == 'input' %}
+      {{ type_input.input(key, field) }}
+    {% elif field.type == "textarea" %}
+        {{ type_textarea.textarea(key, field) }}
+    {% elif field.type == "multipleArea" %}
+        {{ type_multitextarea.multiple_textarea(key, field) }}
+    {% elif field.type == "color" %}
+      {{ type_color.color(key, field, languages) }}
+    {% elif field.type == "links" %}
+      {{ type_links.links(key, field, languages) }}
+
+    {% else %}
+      <p>Type non géré : {{ field.type }}</p>
+    {% endif %}
+  {% endfor %}
+
+  <button type="submit"><i class="fas fa-save"></i> Enregistrer et générer la page</button>
+</form>
+
+<script src="{{ url_for('static', filename='scripts/textarea.js') }}"></script>
+<script src="{{ url_for('static', filename='scripts/event_listener.js') }}"></script>
+<script src="{{ url_for('static', filename='scripts/color.js') }}"></script>
+<script src="{{ url_for('static', filename='scripts/links.js') }}"></script>
+<script>
+window.addEventListener("load", () => {
+  document.querySelectorAll("textarea").forEach((el) => {
+    el.style.height = "auto";
+    el.style.height = el.scrollHeight + 5 + "px";
+  });
+});
+let resizeTimeout;
+document.addEventListener("input", function (e) {
+  if (e.target.matches("textarea")) {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      e.target.style.height = "auto";
+      e.target.style.height = e.target.scrollHeight + 5 + "px";
+    }, 500);
+  }
+});
+
+</script>
+</body>

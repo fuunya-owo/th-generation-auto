@@ -1,0 +1,72 @@
+{% import 'types/template.html' as type_template %}
+{% import 'types/icon.html' as type_icon %}
+{% import 'types/image.html' as type_image %}
+{% import 'types/input.html' as type_input %}
+{% import 'types/textarea.html' as type_textarea %}
+{% import 'types/multiple_textarea.html' as type_multitextarea %}
+{% import 'types/color.html' as type_color %}
+
+{% macro links(key, field, languages) %}
+  <fieldset class="links-fieldset">
+    <legend>{{ field.label }}</legend>
+
+    <div data-links-group="{{ key }}">
+    {% for link in field.content %}
+      {% set link_index = loop.index0 %}
+      <div class="link-group" data-link-index="{{ link_index }}">
+        <h4>Link {{ loop.index }}</h4>
+
+        {% for subkey, subvalue in link.items() %}
+          {% set input_name = key ~ '_' ~ subkey ~ '_' ~ link_index %}
+          {% if subvalue.type == 'icon' %}
+            {{ type_icon.icon(input_name, subvalue) }}
+          {% elif subvalue.type == 'image' %}
+            {{ type_image.image(input_name, subvalue) }}
+          {% elif subvalue.type == 'input' %}
+            {{ type_input.input(input_name, subvalue) }}
+          {% elif subvalue.type == 'textarea' %}
+            {{ type_textarea.textarea(input_name, subvalue) }}
+          {% elif subvalue.type == 'multiple_textarea' %}
+            {{ type_multitextarea.multiple_textarea(input_name, subvalue) }}
+          {% elif subvalue.type == 'color' %}
+            {{ type_color.color(input_name, subvalue, languages) }}
+          {% else %}
+            <p>Type non géré : {{ subvalue.type }}</p>
+          {% endif %}
+        {% endfor %}
+        <div style="text-align: end;">
+          <button type="button" class="remove-link btn btn-danger" onclick="removeLink(this)"><i class="fas fa-times"></i> Supprimer ce lien</button>
+        </div>
+      </div>
+    {% endfor %}
+      <div class="link-group link-template" style="display: none;" data-link-index="__INDEX__">
+        <h4>Link __INDEX__</h4>
+        {% for item in field.link %}
+          {% set subkey = item.key %}
+          {% set subfield = item %}
+          {% set input_name = key ~ '_' ~ subkey ~ '___INDEX__' %}
+          {% if subfield.type == 'input' %}
+            {{ type_input.input(input_name, subfield) }}
+          {% elif subfield.type == 'image' %}
+            {{ type_image.image(input_name, subfield) }}
+          {% elif subfield.type == 'textarea' %}
+            {{ type_textarea.textarea(input_name, subfield) }}
+          {% elif subfield.type == 'multiple_textarea' %}
+            {{ type_multitextarea.multiple_textarea(input_name, subfield) }}
+          {% elif subfield.type == 'color' %}
+            {{ type_color.color(input_name, subfield, languages) }}
+          {% elif subfield.type == 'icon' %}
+            {{ type_icon.icon(input_name, subfield) }}
+          {% else %}
+            <p>Type non géré dans template : {{ subfield.type }}</p>
+          {% endif %}
+        {% endfor %}
+        <div style="text-align: end;">
+          <button type="button" class="remove-link btn btn-danger" onclick="removeLink(this)"><i class="fas fa-times"></i> Supprimer ce lien</button>
+        </div>
+      </div>
+    </div>
+
+    <button type="button" class="add-link btn btn-secondary" onclick="addLink('{{ key }}')"><i class="fas fa-plus"></i> Ajouter un lien</button>
+  </fieldset>
+{% endmacro %}

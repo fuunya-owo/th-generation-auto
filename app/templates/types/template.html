@@ -1,0 +1,13 @@
+{% macro template(key, field, templates) %}
+  <fieldset>
+        <legend>{{ field.label }}</legend>
+        <div class="grid-content-2">
+          <label for="{{ key }}_content">Template utilisé :</label>
+          <select name="{{ key }}_content" id="{{ key }}_content">
+            {% for tpl in templates %}
+              <option value="{{ tpl }}" {% if tpl == field.content %}selected{% endif %}>{{ tpl }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </fieldset>
+{% endmacro %}

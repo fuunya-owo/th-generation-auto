@@ -1,0 +1,35 @@
+{% macro textarea(key, field) %}
+<fieldset>
+  <legend>{{ field.label }}</legend>
+  <div class="grid-content-textarea">
+    {% for subkey, value in field.items() %}
+      {% if subkey != "label" and subkey != "type" %}
+        {% if subkey.startswith("content") %}
+          {% set suffix = subkey[7:] %}
+          {% if suffix == "" %}
+            {% set label = field.label %}
+          {% elif "Spoiler" in suffix %}
+            {% set langcode = suffix.replace("Spoiler", "") %}
+            {% if langcode == "" %}
+              {% set label = field.label ~ " Spoiler" %}
+            {% else %}
+              {% set label = field.label ~ " Spoiler (" ~ langcode ~ ")" %}
+            {% endif %}
+          {% else %}
+            {% set label = field.label ~ " (" ~ suffix ~ ")" %}
+          {% endif %}
+          <div class="cell">
+            <label for="{{ key }}_{{ subkey }}">{{ label }}</label>
+            <textarea
+              {% if 'Spoiler' in suffix %}class="spoiler"{% endif %}
+              rows="1"
+              name="{{ key }}_{{ subkey }}"
+              id="{{ key }}_{{ subkey }}"
+            >{{ value }}</textarea>
+          </div>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</fieldset>
+{% endmacro %}

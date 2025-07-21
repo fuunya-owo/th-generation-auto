@@ -1,0 +1,26 @@
+{% macro image(key, field) %}
+  <fieldset>
+        <legend>{{ field.label }}</legend>
+        <div class="grid-content">
+          <div class="grid-content-2">
+            <!-- content -->
+            <label for="{{ key }}_content">Image URL</label>
+            <input type="text" id="{{ key }}_content" name="{{ key }}_content" value="{{ field.content }}">
+          </div>
+          <div style="margin: 5px 0; display: flex; justify-content: end;">
+            <img id="{{ key }}_preview" src="{{ field.content }}" alt="Preview" style="max-height: 200px;">
+          </div>
+
+          <!-- contentSpoiler -->
+          {% if field.contentSpoiler is defined %}
+              <div class="grid-content-2">
+                <label for="{{ key }}_contentSpoiler">Image URL Spoiler</label>
+                <input class="spoiler" type="text" id="{{ key }}_contentSpoiler" name="{{ key }}_contentSpoiler" value="{{ field.contentSpoiler }}">
+              </div>
+              <div style="margin: 5px 0; display: flex; justify-content: end;">
+                <img id="{{ key }}_spoiler_preview" src="{{ field.contentSpoiler }}" alt="Spoiler preview" style="max-height: 200px;">
+              </div>
+          {% endif %}
+        </div>
+      </fieldset>
+{% endmacro %}
